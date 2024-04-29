@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'display_form.dart';
 
 class MyCustomForm extends StatefulWidget {
   const MyCustomForm({super.key});
@@ -11,6 +13,16 @@ class MyCustomForm extends StatefulWidget {
 
 class MyCustomFormState extends State<MyCustomForm> {
   final _formKey = GlobalKey<FormState>();
+  final _controllernama = TextEditingController();
+  final _controlleralamat = TextEditingController();
+
+  Future<void> _simpanData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString('nama', _controllernama.text);
+      prefs.setString('alamat', _controlleralamat.text);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +45,20 @@ class MyCustomFormState extends State<MyCustomForm> {
                         style: TextStyle(fontSize: 16),
                       ),
                       TextFormField(
+                        controller: _controllernama,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Anda harus memasukan input';
+                          }
+                          return null;
+                        },
+                      ),
+                      Text(
+                        'Masukan Input Alamat',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      TextFormField(
+                        controller: _controlleralamat,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Anda harus memasukan input';
@@ -45,6 +71,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
+                              _simpanData();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DataDisplayPage()));
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('Data Diproses')));
                             }
