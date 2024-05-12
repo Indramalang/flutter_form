@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'display_form.dart';
+import 'display_page.dart';
 
 class MyCustomForm extends StatefulWidget {
   const MyCustomForm({super.key});
