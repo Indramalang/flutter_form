@@ -73,92 +73,98 @@ class MyCustomFormState extends State<MyCustomForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Todo List')),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              Container(
-                height: 60.0, // Atur tinggi sesuai kebutuhan Anda
-                color: Colors.blue,
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Menu Navigasi',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
+      appBar: AppBar(title: Text('Todo List')),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Container(
+              height: 60.0, // Atur tinggi sesuai kebutuhan Anda
+              color: Colors.blue,
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Menu Navigasi',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Data Todo List'),
+              onTap: () {
+                _bacaData();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DataDisplayPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          Positioned(
+            left: 75,
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: Image(
+                image: AssetImage("assets/images/gambarlaptop.jpg"),
+                width: 300,
+                height: 300,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 220,
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Container(
+                  width: 300.0,
+                  height: 500.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Masukan Input Todo List',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      TextFormField(
+                        controller: _controllernama,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Anda harus memasukan input';
+                          }
+                          return null;
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _tambahData(_controllernama.text, false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Data Diproses')),
+                              );
+                              _controllernama.clear();
+                            }
+                          },
+                          child: Text('Submit'),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              ListTile(
-                title: Text('Data Todo List'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DataDisplayPage()),
-                  );
-                },
-              ),
-              // Tambahkan lebih banyak ListTile di sini untuk item menu lainnya
-            ],
-          ),
-        ),
-        body: Stack(
-          children: <Widget>[
-            Positioned(
-              left: 75,
-              child: SizedBox(
-                width: 200,
-                height: 200,
-                child: Image.network('https://picsum.photos/250?image=9'),
-              ),
             ),
-            Positioned(
-              top: 220,
-              child: Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 12.0),
-                    child: Container(
-                      width: 300.0,
-                      height: 500.0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Masukan Input Todo List',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          TextFormField(
-                            controller: _controllernama,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Anda harus memasukan input';
-                              }
-                              return null;
-                            },
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  // Memanggil _tambahData dengan argumen yang diperlukan
-                                  _tambahData(_controllernama.text, false);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Data Diproses')));
-                                  _controllernama.clear();
-                                }
-                              },
-                              child: Text('Submit'),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )),
-            )
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
